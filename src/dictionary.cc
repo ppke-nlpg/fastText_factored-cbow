@@ -131,7 +131,9 @@ entry_type Dictionary::getType(int32_t id) const {
 }
 
 entry_type Dictionary::getType(const std::string& w) const {
-  return (w.find(args_->label) == 0) ? entry_type::label : entry_type::word;
+    if(w.find(args_->factorDelimiter) == 0)
+        return entry_type::factor;
+    return (w.find(args_->label) == 0) ? entry_type::label : entry_type::word;
 }
 
 std::string Dictionary::getWord(int32_t id) const {
@@ -230,6 +232,11 @@ void Dictionary::readFromFile(std::istream& in) {
   int64_t minThreshold = 1;
   while (readWord(in, word)) {
     add(word);
+    /*std::cout << "DEBUG word: " << word << " " ;
+    if(getType(word) == entry_type::factor)
+        std::cout << "FACTOR";
+    std::cout << std::endl;*/
+
     if (ntokens_ % 1000000 == 0 && args_->verbose > 1) {
       std::cerr << "\rRead " << ntokens_  / 1000000 << "M words" << std::flush;
     }
@@ -258,7 +265,7 @@ void Dictionary::threshold(int64_t t, int64_t tl) {
       return e1.count > e2.count;
     });
   words_.erase(remove_if(words_.begin(), words_.end(), [&](const entry& e) {
-        return (e.type == entry_type::word && e.count < t) ||
+        return ((e.type == entry_type::word || e.type == entry_type::factor )&& e.count < t) ||
                (e.type == entry_type::label && e.count < tl);
       }), words_.end());
   words_.shrink_to_fit();
@@ -269,7 +276,7 @@ void Dictionary::threshold(int64_t t, int64_t tl) {
   for (auto it = words_.begin(); it != words_.end(); ++it) {
     int32_t h = find(it->word);
     word2int_[h] = size_++;
-    if (it->type == entry_type::word) nwords_++;
+    if (it->type == entry_type::word || it->type == entry_type::factor) nwords_++;
     if (it->type == entry_type::label) nlabels_++;
   }
 }
@@ -338,10 +345,17 @@ int32_t Dictionary::getLine(std::istream& in,
   while (readWord(in, token)) {
     int32_t h = find(token);
     int32_t wid = word2int_[h];
+    std::cout << "TOKEN: " << token << " " << wid;
+    if (getType(wid) == entry_type::factor){
+        std::cout << " FACTOR";
+        //for(auto ii : getSubwords(wid))
+        //    std::cout << " SUB:" << ii;
+    }
+    std::cout << std::endl;
     if (wid < 0) continue;
 
     ntokens++;
-    if (getType(wid) == entry_type::word && !discard(wid, uniform(rng))) {
+    if ((getType(wid) == entry_type::word || getType(wid) == entry_type::factor) && !discard(wid, uniform(rng))) {
       words.push_back(wid);
     }
     if (ntokens > MAX_LINE_SIZE || token == EOS) break;
@@ -365,7 +379,7 @@ int32_t Dictionary::getLine(std::istream& in,
     entry_type type = wid < 0 ? getType(token) : getType(wid);
 
     ntokens++;
-    if (type == entry_type::word) {
+    if (type == entry_type::word || type == entry_type::factor) {
       addSubwords(words, token, wid);
       word_hashes.push_back(h);
     } else if (type == entry_type::label && wid >= 0) {

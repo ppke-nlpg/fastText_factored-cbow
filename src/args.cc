@@ -34,6 +34,7 @@ Args::Args() {
   lrUpdateRate = 100;
   t = 1e-4;
   label = "__label__";
+  factorDelimiter = 0x04;
   verbose = 2;
   pretrainedVectors = "";
   saveOutput = false;
@@ -146,6 +147,8 @@ void Args::parseArgs(const std::vector<std::string>& args) {
         t = std::stof(args.at(ai + 1));
       } else if (args[ai] == "-label") {
         label = std::string(args.at(ai + 1));
+      } else if (args[ai] == "-factor-delimiter") {
+        factorDelimiter = std::string(args.at(ai + 1));
       } else if (args[ai] == "-verbose") {
         verbose = std::stoi(args.at(ai + 1));
       } else if (args[ai] == "-pretrainedVectors") {

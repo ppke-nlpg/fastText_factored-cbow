@@ -23,7 +23,7 @@
 namespace fasttext {
 
 typedef int32_t id_type;
-enum class entry_type : int8_t {word=0, label=1};
+enum class entry_type : int8_t {word=0, label=1, factor=2};
 
 struct entry {
   std::string word;
