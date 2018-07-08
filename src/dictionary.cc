@@ -334,6 +334,46 @@ void Dictionary::reset(std::istream& in) const {
 }
 
 int32_t Dictionary::getLine(std::istream& in,
+                            std::vector<std::vector<int32_t>> & words,
+                            std::minstd_rand& rng) const {
+  std::uniform_real_distribution<> uniform(0, 1);
+  std::string token;
+  int32_t ntokens = 0;
+
+  reset(in);
+  words.clear();
+  bool discarded = false;
+  while (readWord(in, token)) {
+    int32_t h = find(token);
+    int32_t wid = word2int_[h];
+    if (wid < 0) continue;
+    /*
+    std::cout << "TOKEN: " << token << " " << wid;
+    if (getType(wid) == entry_type::factor){
+        std::cout << " FACTOR";
+        //for(auto ii : getSubwords(wid))
+        //    std::cout << " SUB:" << ii;
+    }
+    std::cout << std::endl;
+    */
+    if(getType(wid) == entry_type::factor && words.size() > 0)
+    {
+        if(words.size() > 0 && !discarded)
+            words[words.size()-1].push_back(wid);
+        continue;
+    }
+
+    ntokens++;
+    discarded = discard(wid, uniform(rng));
+    if ((getType(wid) == entry_type::word) && !discarded) {
+      words.push_back(std::vector<int32_t>(1,wid));
+    }
+    if (ntokens > MAX_LINE_SIZE || token == EOS) break;
+  }
+  return ntokens;
+}
+
+int32_t Dictionary::getLine(std::istream& in,
                             std::vector<int32_t>& words,
                             std::minstd_rand& rng) const {
   std::uniform_real_distribution<> uniform(0, 1);
@@ -345,6 +385,7 @@ int32_t Dictionary::getLine(std::istream& in,
   while (readWord(in, token)) {
     int32_t h = find(token);
     int32_t wid = word2int_[h];
+    /*
     std::cout << "TOKEN: " << token << " " << wid;
     if (getType(wid) == entry_type::factor){
         std::cout << " FACTOR";
@@ -352,6 +393,7 @@ int32_t Dictionary::getLine(std::istream& in,
         //    std::cout << " SUB:" << ii;
     }
     std::cout << std::endl;
+    */
     if (wid < 0) continue;
 
     ntokens++;
