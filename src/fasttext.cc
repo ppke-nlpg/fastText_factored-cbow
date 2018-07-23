@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <numeric>
-
+#include <stdlib.h>
 
 namespace fasttext
 {
@@ -447,7 +447,12 @@ void FastText::cbow(Model& model, real lr,
         {
             if (c != 0 && w + c >= 0 && w + c < line.size())
             {
-                const std::vector<int32_t>& ngrams = dict_->getSubwords(line[w + c][0]);
+                int32_t envWord = line[w + c][0];
+                if(line[w + c].size() > 1)
+                {
+                    envWord = line[w + c][rand() % line[w + c].size()];
+                }
+                const std::vector<int32_t>& ngrams = dict_->getSubwords(envWord);
                 bow.insert(bow.end(), ngrams.cbegin(), ngrams.cend());
             }
         }

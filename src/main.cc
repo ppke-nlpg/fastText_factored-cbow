@@ -10,6 +10,9 @@
 #include <iostream>
 #include <queue>
 #include <iomanip>
+#include <stdlib.h>
+#include <time.h>
+
 #include "fasttext.h"
 #include "args.h"
 
@@ -339,6 +342,8 @@ void dump(const std::vector<std::string>& args) {
 }
 
 int main(int argc, char** argv) {
+  srand (time(NULL));
+
   std::vector<std::string> args(argv, argv + argc);
   if (args.size() < 2) {
     printUsage();
