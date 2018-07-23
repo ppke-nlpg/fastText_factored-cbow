@@ -5,3 +5,7 @@
 data
 fasttext
 result
+src/fasttext.cc.rej
+nlpg/nlpg.layout
+nlpg/nlpg.depend
+nlpg/nlpg.cbp

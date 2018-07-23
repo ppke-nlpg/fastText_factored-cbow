@@ -217,7 +217,8 @@ void Args::printDictionaryHelp() {
     << "  -minn               min length of char ngram [" << minn << "]\n"
     << "  -maxn               max length of char ngram [" << maxn << "]\n"
     << "  -t                  sampling threshold [" << t << "]\n"
-    << "  -label              labels prefix [" << label << "]\n";
+    << "  -label              labels prefix [" << label << "]\n"
+    << "  -factor-delimiter   factor delimiter prefix [" << factorDelimiter << "]\n";
 }
 
 void Args::printTrainingHelp() {
