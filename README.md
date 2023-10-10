@@ -58,7 +58,25 @@ The following arguments for quantization are optional:
 The website of the original fastText is located [*here*](https://github.com/facebookresearch/fastText)
 
 ## References for the fastText with factored CBOW
-[1] 
+[0] Attila Novák, László Laki, Borbála Novák, [CBOW-tag: a Modified CBOW Algorithm for Generating Embedding Models from Annotated Corpora](https://aclanthology.org/2020.lrec-1.590/)
+```
+@inproceedings{novak-etal-2020-cbow,
+    title = "{CBOW}-tag: a Modified {CBOW} Algorithm for Generating Embedding Models from Annotated Corpora",
+    author = "Nov{\'a}k, Attila  and
+      Laki, L{\'a}szl{\'o}  and
+      Nov{\'a}k, Borb{\'a}la",
+    booktitle = "Proceedings of the Twelfth Language Resources and Evaluation Conference",
+    month = may,
+    year = "2020",
+    address = "Marseille, France",
+    publisher = "European Language Resources Association",
+    url = "https://aclanthology.org/2020.lrec-1.590",
+    pages = "4798--4801",
+    abstract = "In this paper, we present a modified version of the CBOW algorithm implemented in the fastText framework. Our modified algorithm, CBOW-tag builds a vector space model that includes the representation of the original word forms and their annotation at the same time. We illustrate the results by presenting a model built from a corpus that includes morphological and syntactic annotations. The simultaneous presence of unannotated elements and different annotations at the same time in the model makes it possible to constrain nearest neighbour queries to specific types of elements. The model can thus efficiently answer questions such as What do we eat?, What can we do with a skeleton? What else do we do with what we eat?, etc. Error analysis reveals that the model can highlight errors introduced into the annotation by the tagger and parser we used to generate the annotations as well as lexical peculiarities in the corpus itself, especially if we do not limit the vocabulary of the model to frequent items.",
+    language = "English",
+    ISBN = "979-10-95546-34-4",
+}
+```
 
 ## References from the original fastText
 
